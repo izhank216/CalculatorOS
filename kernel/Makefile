@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -m32 -O2 -Wall -Wextra -c
+CFLAGS = -m32 -O2 -Wall -Wextra -ffreestanding -c
 LD = ld
 SRC = kernel.c
 OBJ = ../build/kernel.o
