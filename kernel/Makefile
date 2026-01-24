@@ -1,13 +1,13 @@
 CC = gcc
-CFLAGS = -m32 -O2 -Wall -Wextra
+CFLAGS = -m32 -O2 -Wall -Wextra -ffreestanding -c
 SRC = kernel.c
-BIN = ../build/kernel.bin
+OBJ = ../build/kernel.o
 
-all: $(BIN)
+all: $(OBJ)
 
-../build/kernel.bin: $(SRC)
+../build/kernel.o: $(SRC)
 	mkdir -p ../build
-	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
+	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
 
 clean:
 	rm -rf ../build
