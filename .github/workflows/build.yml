@@ -19,7 +19,7 @@ jobs:
       - run: |
           mkdir -p build/iso
           cp build/boot.bin build/iso/boot.bin
-          cp build/kernel.o build/iso/kernel.o
+          cp build/kernel.bin build/iso/kernel.bin
       - run: mkisofs -o build/calcos.iso -b boot.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table build/iso
       - uses: actions/upload-artifact@v4
         with:
