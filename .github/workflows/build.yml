@@ -1,0 +1,27 @@
+name: Build CalculatorOS ISO
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt update
+      - run: sudo apt install -y nasm gcc-multilib build-essential genisoimage
+      - run: make -C boot
+      - run: make -C kernel
+      - run: |
+          mkdir -p build/iso
+          cp build/boot.bin build/iso/boot.bin
+          cp build/kernel.bin build/iso/kernel.bin
+      - run: mkisofs -o build/calcos.iso -b boot.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table build/iso
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CalculatorOS-ISO
+          path: build/calcos.iso
