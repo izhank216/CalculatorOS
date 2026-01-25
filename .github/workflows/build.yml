@@ -14,8 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: sudo apt update
       - run: sudo apt install -y nasm gcc-multilib build-essential genisoimage
-      - run: make -C boot
-      - run: make -C kernel
+      - run: make all
       - run: |
           mkdir -p build/iso
           cp build/boot.bin build/iso/boot.bin
