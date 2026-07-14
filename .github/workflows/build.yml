@@ -17,7 +17,7 @@ jobs:
       - run: make all
       - run: |
           mkdir -p build/iso
-          gcc -m32 -c boot/bootloader.s -o build/boot.o
+          gcc -m32 -c boot/bootloader.S -o build/boot.o
           ld -m elf_i386 -Ttext 0x7c00 --oformat binary build/boot.o -o build/boot.bin
           cp build/boot.bin build/iso/boot.bin
           cp build/kernel.bin build/iso/kernel.bin
