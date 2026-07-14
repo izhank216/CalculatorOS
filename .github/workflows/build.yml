@@ -12,16 +12,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
       - run: sudo apt update
+      
       - run: sudo apt install -y nasm gcc-multilib build-essential genisoimage xorriso mtools
-      - run: make all
+      
       - run: |
           mkdir -p build/iso
           gcc -m32 -c boot/bootloader.S -o build/boot.o
           ld -m elf_i386 -Ttext 0x7c00 --oformat binary build/boot.o -o build/boot.bin
+          gcc -m32 -c kernel/kernel_entry.S -o build/kernel_entry.o
+          gcc -m32 -ffreestanding -fno-stack-protector -c kernel/kernel.c -o build/kernel.o
+          ld -m elf_i386 -Ttext 0x1000 --oformat binary build/kernel_entry.o build/kernel.o -o build/kernel.bin
           cp build/boot.bin build/iso/boot.bin
           cp build/kernel.bin build/iso/kernel.bin
+          
       - run: mkisofs -o build/calcos.iso -b boot.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table build/iso
+      
       - uses: actions/upload-artifact@v4
         with:
           name: CalculatorOS-ISO
