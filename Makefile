@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -m32 -O2 -Wall -Wextra -ffreestanding -fno-pie -fno-stack-protector -c
 LD = ld
-SRC = kernel.c
+SRC = kernel/kernel.c
 OBJ = build/kernel.o
 BIN = build/kernel.bin
 ISO = calcos.iso
