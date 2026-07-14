@@ -8,6 +8,7 @@ _start:
     movw %ax, %es
     movw %ax, %ss
     movw $0x7C00, %sp
+    movb %dl, boot_drive
     sti
 
     movw $ascii_calc, %si
@@ -37,7 +38,7 @@ load_kernel:
     movb $0, %ch
     movb $2, %cl
     movb $0, %dh
-    movb $0x80, %dl
+    movb boot_drive, %dl
     int $0x13
     
     jc disk_error
@@ -56,6 +57,9 @@ error_loop:
 halt:
     cli
     hlt
+
+boot_drive:
+    .byte 0
 
 ascii_calc:
     .ascii "CalculatorOS\r\n\0"
