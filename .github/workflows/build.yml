@@ -22,7 +22,7 @@ jobs:
           gcc -m32 -c boot/bootloader.S -o build/boot.o
           ld -m elf_i386 -Ttext 0x7c00 --oformat binary build/boot.o -o build/boot.bin
           gcc -m32 -c kernel/kernel_entry.S -o build/kernel_entry.o
-          gcc -m32 -ffreestanding -fno-stack-protector -c kernel/kernel.c -o build/kernel.o
+          gcc -m32 -ffreestanding -fno-pic -fno-PIC -fno-stack-protector -mno-sse -c kernel/kernel.c -o build/kernel.o
           ld -m elf_i386 -Ttext 0x1000 --oformat binary build/kernel_entry.o build/kernel.o -o build/kernel.bin
           cp build/boot.bin build/iso/boot.bin
           cp build/kernel.bin build/iso/kernel.bin
