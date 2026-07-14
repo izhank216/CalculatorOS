@@ -1,43 +1,67 @@
-BITS 16
-ORG 0x7C00
+.code16
+.global _start
 
-start:
+_start:
     cli
-    xor ax, ax
-    mov ds, ax
-    mov es, ax
-    mov ss, ax
-    mov sp, 0x7C00
+    xorw %ax, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %ss
+    movw $0x7C00, %sp
     sti
 
-    mov si, ascii_calc
+    movw $ascii_calc, %si
+
 print_loop:
     lodsb
-    cmp al, 0
+    cmpb $0, %al
     je load_kernel
-    mov ah, 0x0E
-    int 0x10
+    movb $0x0E, %ah
+    int $0x10
     call delay
     jmp print_loop
 
 delay:
-    mov cx, 0xFFFF
+    movw $0xFFFF, %cx
 d1:
     loop d1
     ret
 
 load_kernel:
-    mov bx, 0x1000
-    mov ah, 0x02
-    mov al, 20
-    mov ch, 0
-    mov cl, 2
-    mov dh, 0
-    mov dl, 0x80
-    int 0x13
-    jmp 0x1000:0x0000
+    xorw %ax, %ax
+    movw %ax, %es
+    movw $0x1000, %bx
+    
+    movb $0x02, %ah
+    movb $20, %al
+    movb $0, %ch
+    movb $2, %cl
+    movb $0, %dh
+    movb $0x80, %dl
+    int $0x13
+    
+    jc disk_error
+    ljmp $0x0000, $0x1000
 
-ascii_calc db "CalculatorOS",0
+disk_error:
+    movw $error_msg, %si
+error_loop:
+    lodsb
+    cmpb $0, %al
+    je halt
+    movb $0x0E, %ah
+    int $0x10
+    jmp error_loop
 
-times 510-($-$$) db 0
-dw 0xAA55
+halt:
+    cli
+    hlt
+
+ascii_calc:
+    .ascii "CalculatorOS\r\n\0"
+
+error_msg:
+    .ascii "Disk Read Fail!\0"
+
+.org 510
+.word 0xAA55
